@@ -1,0 +1,7 @@
+{
+  "name": "crypto-alert",
+  "short_name": "crypto-alert",
+  "description": "A simple cryptocurrency notification app in Javascript using the Coinbase API:",
+  "start_url": "/",
+  "display": "standalone"
+}
