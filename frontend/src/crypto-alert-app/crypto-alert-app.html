@@ -2,31 +2,83 @@
 <link rel="import" href="../../bower_components/app-layout/app-header-layout/app-header-layout.html"/>
 <link rel="import" href="../../bower_components/app-layout/app-header/app-header.html"/>
 <link rel="import" href="../../bower_components/app-layout/app-toolbar/app-toolbar.html"/>
+<link rel="import" href="../../bower_components/app-layout/app-box/app-box.html"/>
 <link rel="import" href="../../bower_components/paper-material/paper-material.html"/>
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html"/>
+<link rel="import" href="../../bower_components/paper-button/paper-button.html"/>
+<link rel="import" href="../../bower_components/paper-input/paper-input.html"/>
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html"/>
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html"/>
+<link rel="import" href="../../bower_components/web-animations-js/web-animations-next-lite.min.html">
+<link rel="import" href="../../bower_components/neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="../../bower_components/neon-animation/animations/fade-out-animation.html">
 
 <dom-module id="crypto-alert-app">/
   <template>
-    <style>
+    <style is="custom-style">
       :host {
-        @apply(--layout-flex);
+        @apply --layout-vertical;
       }
 
       app-toolbar {
         background-color: #20c9df;
         color: white;
         font-family: 'Roboto', sans-serif;
+        @apply --layout-between-aligned;
+        padding: 0 8%
+      }
+
+      app-box {
+        @apply --layout-flex;
+        @apply --layout-vertical;
+        margin: 1% 1%;
+      }
+
+      paper-material {
+        @apply --layout-vertical;
+      }
+
+      #main {
+        margin: 1% 1%;
+        @apply --layout-flex;
+        @apply --layout-vertical;
+      }
+
+      #dialog {
+        @apply --layout-vertical;
       }
     </style>
 
-    <app-header-layout class="flex">
+    <app-header-layout fullbleed>
+
       <app-header slot="header">
         <paper-material elevation="1">
           <app-toolbar>
             <div main-title>crypto-alert</div>
+            <paper-icon-button icon="add" on-tap="_openDialog"></paper-icon-button>
           </app-toolbar>
         </paper-material>
       </app-header>
+
+      <paper-material id="main" elevation="1">
+        TOTOTOO
+
+        <paper-dialog id="dialog"
+                      always-on-top
+                      entry-animation="scale-up-animation"
+                      exit-animation="fade-out-animation">
+          <div>
+            <paper-input label="limit value"></paper-input>
+          </div>
+          <div>
+            <paper-button dialog-dismiss>Cancel</paper-button>
+            <paper-button dialog-confirm autofocus>Accept</paper-button>
+          </div>
+        </paper-dialog>
+      </paper-material>
+
     </app-header-layout>
+
   </template>
 
   <script>
@@ -40,12 +92,11 @@
           }
 
           static get properties() {
-              return {
-                  prop1: {
-                      type: String,
-                      value: 'crypto-alert-app'
-                  }
-              };
+              return {};
+          }
+
+          _openDialog() {
+              this.$.dialog.open();
           }
       }
 
