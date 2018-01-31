@@ -1,13 +1,32 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/app-layout/app-header-layout/app-header-layout.html"/>
+<link rel="import" href="../../bower_components/app-layout/app-header/app-header.html"/>
+<link rel="import" href="../../bower_components/app-layout/app-toolbar/app-toolbar.html"/>
+<link rel="import" href="../../bower_components/paper-material/paper-material.html"/>
 
-<dom-module id="crypto-alert-app">
+<dom-module id="crypto-alert-app">/
   <template>
     <style>
       :host {
-        display: block;
+        @apply(--layout-flex);
+      }
+
+      app-toolbar {
+        background-color: #20c9df;
+        color: white;
+        font-family: 'Roboto', sans-serif;
       }
     </style>
-    <h2>Hello [[prop1]]!</h2>
+
+    <app-header-layout class="flex">
+      <app-header slot="header">
+        <paper-material elevation="1">
+          <app-toolbar>
+            <div main-title>crypto-alert</div>
+          </app-toolbar>
+        </paper-material>
+      </app-header>
+    </app-header-layout>
   </template>
 
   <script>
