@@ -3,7 +3,9 @@
 <link rel="import" href="../../bower_components/app-layout/app-header/app-header.html"/>
 <link rel="import" href="../../bower_components/app-layout/app-toolbar/app-toolbar.html"/>
 <link rel="import" href="../../bower_components/app-layout/app-box/app-box.html"/>
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html"/>
 <link rel="import" href="../../bower_components/paper-material/paper-material.html"/>
+<link rel="import" href="../../bower_components/iron-form/iron-form.html"/>
 <link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html"/>
 <link rel="import" href="../../bower_components/paper-button/paper-button.html"/>
 <link rel="import" href="../../bower_components/paper-input/paper-input.html"/>
@@ -18,12 +20,12 @@
     <style is="custom-style">
       :host {
         @apply --layout-vertical;
+        font-family: 'Roboto', sans-serif;
       }
 
       app-toolbar {
         background-color: #20c9df;
         color: white;
-        font-family: 'Roboto', sans-serif;
         @apply --layout-between-aligned;
         padding: 0 8%
       }
@@ -35,6 +37,7 @@
       }
 
       paper-material {
+        @apply --layout-flex;
         @apply --layout-vertical;
       }
 
@@ -46,6 +49,32 @@
 
       #dialog {
         @apply --layout-vertical;
+      }
+
+      #noAlert {
+        color: #6b6b6b;
+        @apply --layout-flex;
+        @apply --layout-vertical;
+      }
+
+      #message {
+        @apply --layout-flex-3;
+        @apply --layout-vertical;
+        @apply --layout-end-justified;
+        text-align: center;
+        font-size: 2em;
+      }
+
+      #helper {
+        @apply --layout-flex-2;
+        @apply --layout-vertical;
+        @apply --layout-start-justified;
+        text-align: center;
+        font-size: 1em;
+      }
+
+      .alert {
+        margin-top: 10px;
       }
     </style>
 
@@ -60,25 +89,48 @@
         </paper-material>
       </app-header>
 
-      <paper-material id="main" elevation="1">
-        TOTOTOO
+      <iron-pages id="main" selected="0">
+        <paper-material elevation="1" id="noAlert">
+          <div id="message">
+            No alert set yet!
+          </div>
+          <div id="helper">
+            click the " + " button in the toolbar to add a new one.
+          </div>
+        </paper-material>
+        <div>
+          <template is="dom-repeat" items="[[_alerts]]" as="alert">
+            <paper-material elevation="1" class="alert">
+              [[alert.limitValue]]
+            </paper-material>
+          </template>
+        </div>
+      </iron-pages>
 
-        <paper-dialog id="dialog"
-                      always-on-top
-                      entry-animation="scale-up-animation"
-                      exit-animation="fade-out-animation">
-          <div>
-            <paper-input label="limit value"></paper-input>
-          </div>
-          <div>
-            <paper-button dialog-dismiss>Cancel</paper-button>
-            <paper-button dialog-confirm autofocus>Accept</paper-button>
-          </div>
-        </paper-dialog>
-      </paper-material>
+      <paper-dialog id="dialog"
+                    always-on-top
+                    entry-animation="scale-up-animation"
+                    exit-animation="fade-out-animation">
+
+        <iron-form id="form">
+          <form>
+            <paper-input
+                    id="limit"
+                    required
+                    label="limit value"
+                    pattern="^[0-9]+([\.,][0-9]+)?$"
+                    error-message="Should be a number">
+            </paper-input>
+            <div>
+              <paper-button dialog-dismiss>Cancel</paper-button>
+              <paper-button autofocus on-tap=_validateForm>Add</paper-button>
+            </div>
+          </form>
+        </iron-form>
+
+      </paper-dialog>
 
     </app-header-layout>
-
   </template>
 
   <script>
@@ -92,11 +144,47 @@
           }
 
           static get properties() {
-              return {};
+              return {
+                  _alerts: {
+                      type: Array,
+                      value: () => [],
+                      observer: '_displayAlerts'
+                  }
+              };
           }
 
           _openDialog() {
               this.$.dialog.open();
+          }
+
+          _validateForm() {
+              if (this.$.form.validate()) {
+                  if (this._alertAlreadyExists()) {
+                      console.error('trotrt');
+                  } else {
+                      this._addAlert();
+                  }
+                  this.$.dialog.close();
+                  this.$.limit.updateValueAndPreserveCaret('');
+              }
+          }
+
+          _alertAlreadyExists() {
+              return this._alerts.find(alert => alert.limitValue === this.$.limit.value);
+          }
+
+          _addAlert() {
+              const alerts = this._alerts.slice(0);
+              alerts.push({limitValue: this.$.limit.value.replace(',', '.')});
+              this.set('_alerts', alerts);
+          }
+
+          _displayAlerts(newVal) {
+              if (newVal && (newVal.length !== 0)) {
+                  this.$.main.select(1);
+              } else {
+                  this.$.main.select(0);
+              }
           }
       }
 
