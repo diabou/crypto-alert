@@ -1,3 +1,5 @@
+<link rel="import" href="alert-form-behavior.html"/>
+
 <dom-module id="currencies-menu">
   <template>
     <style>
@@ -5,11 +7,19 @@
         --paper-input-container-label: {
           color: #8A8A8A;
         };
+
+        --paper-dropdown-menu-icon: {
+          color: #6a6a6a;
+        }
       }
 
       .invalid {
         --paper-input-container-label: {
-          color: red;
+          color: #e83b3b;
+        };
+
+        --paper-dropdown-menu-icon: {
+          color: #e83b3b;
         };
       }
 
@@ -34,18 +44,13 @@
   </template>
 
   <script>
-      class CurrenciesMenu extends Polymer.mixinBehaviors([Polymer.IronFormElementBehavior, Polymer.PaperInputBehavior], Polymer.Element) {
+      class CurrenciesMenu extends Polymer.mixinBehaviors([MyBehaviors.AlertFormBehavior], Polymer.Element) {
           static get is() {
               return 'currencies-menu';
           }
 
           static get properties() {
               return {
-                  _currencies: {
-                      type: Array,
-                      value: () => ['BTC', 'ETH']
-                  },
-
                   value: {
                       type: String,
                       observer: '_valueChanged'
@@ -54,23 +59,13 @@
                   name: {
                       type: String,
                       value: 'currency'
+                  },
+
+                  _currencies: {
+                      type: Array,
+                      value: () => ['BTC', 'ETH']
                   }
               };
-          }
-
-          validate() {
-              if (this.value) {
-                  this.set('_class', 'valid');
-                  return true;
-              }
-
-              this.set('_class', 'invalid');
-              return false;
-          }
-
-          clear() {
-              this.set('_class', 'valid');
-              this.$.currencies.select();
           }
 
           _valueChanged(newVal) {

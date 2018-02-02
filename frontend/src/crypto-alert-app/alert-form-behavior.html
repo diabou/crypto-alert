@@ -1,0 +1,35 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html"/>
+
+<script>
+
+    window.MyBehaviors = window.MyBehaviors || {};
+
+    MyBehaviors.AlertFormBehaviorImpl = {
+        properties: {
+            _class: {
+                type: String,
+                value: 'valid'
+            }
+        },
+
+        validate: function () {
+            if (this.value) {
+                this._class = 'valid';
+                return true;
+            }
+
+            this._class = 'invalid';
+            return false;
+        },
+
+        clear: function () {
+            this._class = 'valid';
+            this.value = undefined;
+        }
+    };
+
+    MyBehaviors.AlertFormBehavior = [
+        Polymer.IronFormElementBehavior,
+        MyBehaviors.AlertFormBehaviorImpl
+    ];
+</script>

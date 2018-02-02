@@ -13,19 +13,29 @@
       }
     </style>
 
-    <div id="radios" class$=[[_class]]>
+    <div id="radios">
       <div class="radio">
-        <paper-radio-button id="above" noink on-checked-changed=_handleCheck>above</paper-radio-button>
+        <paper-radio-button
+                id="above"
+                class$=[[_class]]
+                noink
+                on-checked-changed=_handleCheck>above
+        </paper-radio-button>
       </div>
       <div class="radio">
-        <paper-radio-button id="below" noink on-checked-changed=_handleCheck>below</paper-radio-button>
+        <paper-radio-button
+                id="below"
+                class$=[[_class]]
+                noink
+                on-checked-changed=_handleCheck>below
+        </paper-radio-button>
       </div>
     </div>
 
   </template>
 
   <script>
-      class RadioMenu extends Polymer.mixinBehaviors([Polymer.IronFormElementBehavior, Polymer.PaperInputBehavior], Polymer.Element) {
+      class RadioMenu extends Polymer.mixinBehaviors([MyBehaviors.AlertFormBehavior], Polymer.Element) {
           static get is() {
               return 'radio-menu';
           }
@@ -43,16 +53,8 @@
               }
           }
 
-          validate() {
-              if (this.$.above.checked || this.$.below.checked) {
-                  return true;
-              }
-
-
-          }
-
           clear() {
-              this.set('value', undefined);
+              super.clear();
               this.$.above.checked = false;
               this.$.below.checked = false;
           }
@@ -67,6 +69,8 @@
               } else if (e.target === below && below.checked) {
                   above.checked = false;
                   this.set('value', 'below');
+              } else if (!above.checked && !below.checked) {
+                  this.set('value', undefined);
               }
           }
       }
