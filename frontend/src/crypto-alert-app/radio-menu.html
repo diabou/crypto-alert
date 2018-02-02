@@ -1,0 +1,76 @@
+<dom-module id="radio-menu">
+  <template>
+    <style>
+      #radios {
+        @apply --layout-vertical;
+        @apply --layout-center-center;
+        margin-top: 1.5em;
+      }
+
+      .radio {
+        @apply --layout-flex;
+        min-height: 2em;
+      }
+    </style>
+
+    <div id="radios" class$=[[_class]]>
+      <div class="radio">
+        <paper-radio-button id="above" noink on-checked-changed=_handleCheck>above</paper-radio-button>
+      </div>
+      <div class="radio">
+        <paper-radio-button id="below" noink on-checked-changed=_handleCheck>below</paper-radio-button>
+      </div>
+    </div>
+
+  </template>
+
+  <script>
+      class RadioMenu extends Polymer.mixinBehaviors([Polymer.IronFormElementBehavior, Polymer.PaperInputBehavior], Polymer.Element) {
+          static get is() {
+              return 'radio-menu';
+          }
+
+          static get properties() {
+              return {
+                  value: {
+                      type: String
+                  },
+
+                  name: {
+                      type: String,
+                      value: 'radio'
+                  }
+              }
+          }
+
+          validate() {
+              if (this.$.above.checked || this.$.below.checked) {
+                  return true;
+              }
+
+
+          }
+
+          clear() {
+              this.set('value', undefined);
+              this.$.above.checked = false;
+              this.$.below.checked = false;
+          }
+
+          _handleCheck(e) {
+              const above = this.$.above;
+              const below = this.$.below;
+
+              if (e.target === above && above.checked) {
+                  below.checked = false;
+                  this.set('value', 'above');
+              } else if (e.target === below && below.checked) {
+                  above.checked = false;
+                  this.set('value', 'below');
+              }
+          }
+      }
+
+      window.customElements.define('radio-menu', RadioMenu);
+  </script>
+</dom-module>

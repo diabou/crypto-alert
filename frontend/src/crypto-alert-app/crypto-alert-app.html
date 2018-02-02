@@ -155,6 +155,8 @@
 
           _handleNewAlert(e) {
               const newAlert = e.detail.body;
+
+              console.log(newAlert);
               if (this._alertAlreadyExists(newAlert)) {
                   alert('The same alert already exists');
               } else {
