@@ -26,7 +26,7 @@
         font-family: 'Roboto', sans-serif;
       }
 
-      app-toolbar {
+      .toolbar {
         background-color: #20c9df;
         color: white;
         @apply --layout-between-aligned;
@@ -74,6 +74,8 @@
 
       .alert {
         margin-top: 10px;
+        border-radius: 5px;
+        padding: 5px 5px 5px 5px;
       }
 
       paper-tooltip {
@@ -87,7 +89,7 @@
 
       <app-header slot="header">
         <paper-material elevation="1">
-          <app-toolbar>
+          <app-toolbar class="toolbar main">
             <div main-title>crypto-alert</div>
             <div>
               <paper-icon-button id="add" icon="add" on-tap="_openDialog"></paper-icon-button>
@@ -109,7 +111,7 @@
         <div id="alerts">
           <template is="dom-repeat" items="[[_alerts]]" as="alert">
             <paper-material elevation="1" class="alert">
-              [[alert.limitValue]]
+              [[alert.currency]] goes [[alert.radio]] [[alert.value]] $
             </paper-material>
           </template>
         </div>
@@ -144,7 +146,9 @@
           }
 
           _alertAlreadyExists(newAlert) {
-              return this._alerts.find(alert => alert.limitValue === newAlert.limitValue);
+              return this._alerts.find(
+                  alert => Object.getOwnPropertyNames(alert).every(name => alert[name] === newAlert[name])
+              );
           }
 
           _addAlert(alert) {
@@ -156,7 +160,6 @@
           _handleNewAlert(e) {
               const newAlert = e.detail.body;
 
-              console.log(newAlert);
               if (this._alertAlreadyExists(newAlert)) {
                   alert('The same alert already exists');
               } else {
