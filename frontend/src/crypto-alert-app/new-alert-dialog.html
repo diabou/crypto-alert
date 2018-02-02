@@ -1,0 +1,72 @@
+<dom-module id="new-alert-dialog">
+  <template>
+    <style>
+      :host {
+        @apply --layout-vertical;
+      }
+
+      #buttons {
+        margin-top: 15px;
+      }
+    </style>
+
+    <paper-dialog id="dialog"
+                  always-on-top
+                  entry-animation="scale-up-animation"
+                  exit-animation="fade-out-animation">
+      <iron-form id="form">
+        <form>
+          <paper-input
+                  id="limit"
+                  required
+                  label="limit value"
+                  pattern="^[0-9]+([\.,][0-9]+)?$"
+                  error-message="Should be a number">
+          </paper-input>
+
+          <div id="buttons">
+            <paper-button dialog-dismiss>Cancel</paper-button>
+            <paper-button autofocus on-tap=_validateForm>Add</paper-button>
+          </div>
+        </form>
+      </iron-form>
+    </paper-dialog>
+
+  </template>
+
+  <script>
+      class NewAlertDialog extends Polymer.Element {
+          static get is() {
+              return 'new-alert-dialog';
+          }
+
+          open() {
+              this.$.dialog.open();
+          }
+
+          close() {
+              this.$.limit.updateValueAndPreserveCaret('');
+              this.$.dialog.close();
+          }
+
+          _validateForm() {
+              const form = this.$.form;
+              if (form.validate()) {
+                  this.dispatchEvent(
+                      new CustomEvent(
+                          'new-alert',
+                          {
+                              detail: {
+                                  kicked: true,
+                                  body: {limitValue: this.$.limit.value.replace(',', '.')}
+                              }
+                          }
+                      )
+                  );
+              }
+          }
+      }
+
+      window.customElements.define('new-alert-dialog', NewAlertDialog);
+  </script>
+</dom-module>
