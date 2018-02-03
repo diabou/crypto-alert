@@ -1,0 +1,60 @@
+<link rel="import" href="form-element-behavior.html"/>
+
+<dom-module id="value-input">
+  <template>
+
+    <paper-input
+            id="value"
+            name="[[name]]"
+            value="{{value}}"
+            required
+            label="value ($)"
+            pattern="^[0-9]+(?:[\.,][0-9]+)?$"
+            error-message="Should be a number"
+            on-value-changed="_validateInput">
+    </paper-input>
+
+  </template>
+
+  <script>
+      class ValueInput extends Polymer.mixinBehaviors([MyBehaviors.FormElementBehavior], Polymer.Element) {
+          static get is() {
+              return 'value-input';
+          }
+
+          static get properties() {
+              return {
+                  name: {
+                      type: String,
+                      value: 'value'
+                  }
+              }
+          }
+
+          _validateInput(e) {
+              const target = e.target;
+
+              if (target === this.$.value) {
+                  if (target.value === "") {
+                      target.invalid = false;
+                  } else {
+                      this.validate();
+                  }
+              }
+          }
+
+          validate() {
+              return this.$.value.validate();
+          }
+
+          clear() {
+              const value = this.$.value;
+              value.updateValueAndPreserveCaret('');
+              setTimeout(() => value.invalid = false);
+          }
+      }
+
+
+      window.customElements.define('value-input', ValueInput);
+  </script>
+</dom-module>

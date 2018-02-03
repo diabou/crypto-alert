@@ -1,5 +1,6 @@
 <link rel="import" href="currencies-input.html"/>
 <link rel="import" href="radio-input.html"/>
+<link rel="import" href="value-input.html"/>
 
 <dom-module id="single-currency-form">
   <template>
@@ -58,26 +59,17 @@
           <div class="text">Alert me when :</div>
           <div class="spacer"></div>
 
-          <currencies-input id="currency" class="input" value="[[currency]]" required></currencies-input>
+          <currencies-input id="currency" class="input" required></currencies-input>
 
           <div class="spacer"></div>
           <div class="text goes">goes</div>
           <div class="spacer"></div>
 
-          <radio-input id="radio" class="input" value="[[radio]]" required></radio-input>
+          <radio-input id="radio" class="input" required></radio-input>
 
           <div class="spacer"></div>
 
-          <paper-input
-                  id="value"
-                  class="input"
-                  name="value"
-                  required
-                  label="value ($)"
-                  pattern="^[0-9]+(?:[\.,][0-9]+)?$"
-                  error-message="Should be a number"
-                  on-value-changed="_validateInput">
-          </paper-input>
+          <value-input id="value" class="input" required></value-input>
 
         </div>
 
@@ -97,6 +89,15 @@
               return 'single-currency-form';
           }
 
+          static get properties() {
+              return {
+                  _inputNames: {
+                      type: Array,
+                      value: () => ['currency', 'radio', 'value']
+                  }
+              }
+          }
+
           _notifyNewAlert() {
               const form = this.$.form;
 
@@ -109,23 +110,10 @@
               }
           }
 
-          _validateInput(e) {
-              const target = e.target;
-
-              if (target.value === "") {
-                  target.invalid = false;
-              } else {
-                  target.validate();
-              }
-          }
-
           clearForm() {
-              this.$.currency.clear();
-              this.$.radio.clear();
-
-              const value = this.$.value;
-              value.updateValueAndPreserveCaret('');
-              setTimeout(() => value.invalid = false);
+              this._inputNames
+                  .map(name => this.$[name])
+                  .forEach(input => input.clear);
           }
       }
 
