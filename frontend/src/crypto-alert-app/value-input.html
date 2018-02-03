@@ -2,12 +2,12 @@
   <template>
 
     <paper-input
-            id="value"
+            id="input"
             name="[[name]]"
             value="{{value}}"
             required
             label="value ($)"
-            pattern="^[0-9]+(?:[\.,][0-9]+)?$"
+            pattern=[[_pattern]]
             error-message="Should be a number"
             on-value-changed="_validateInput">
     </paper-input>
@@ -25,14 +25,32 @@
                   name: {
                       type: String,
                       value: 'value'
+                  },
+
+                  integerValue: {
+                      type: Boolean,
+                      value: false
+                  },
+
+                  _pattern: {
+                      type: String,
+                      value: '^[0-9]+(?:[\\.,][0-9]+)?$'
                   }
+              }
+          }
+
+          ready() {
+              super.ready();
+
+              if (this.integerValue) {
+                  this.set('_pattern', '^[0-9]+$');
               }
           }
 
           _validateInput(e) {
               const target = e.target;
 
-              if (target === this.$.value) {
+              if (target === this.$.input) {
                   if (target.value === "") {
                       target.invalid = false;
                   } else {
@@ -42,11 +60,11 @@
           }
 
           validate() {
-              return this.$.value.validate();
+              return this.$.input.validate();
           }
 
           clear() {
-              const value = this.$.value;
+              const value = this.$.input;
               value.updateValueAndPreserveCaret('');
               setTimeout(() => value.invalid = false);
           }

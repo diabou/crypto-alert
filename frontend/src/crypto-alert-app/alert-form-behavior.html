@@ -1,0 +1,28 @@
+<script>
+
+    window.MyBehaviors = window.MyBehaviors || {};
+
+    MyBehaviors.AlertFormBehavior = {
+        properties: {
+            _inputNames: {
+                type: Array
+            },
+        },
+
+        _notifyNewAlert: el => {
+            if (el.$.form.validate()) {
+                el.dispatchEvent(new CustomEvent('new-alert', {
+                    bubbles: true,
+                    composed: true,
+                    detail: el.$.form.serializeForm()
+                }));
+            }
+        },
+
+        clearForm: el => {
+            el._inputNames
+                .map(name => el.$[name])
+                .forEach(input => input.clear());
+        }
+    }
+</script>

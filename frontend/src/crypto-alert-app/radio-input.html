@@ -31,7 +31,7 @@
                   class$=[[_class]]
                   name=[[choice]]
                   noink
-                  on-checked-changed=_handleCheck>above
+                  on-checked-changed=_handleCheck>[[choice]]
           </paper-radio-button>
         </div>
       </template>
@@ -73,9 +73,17 @@
           }
 
           _handleCheck(e) {
-              if (!this.multiSelect) {
-                  this._class = '_valid';
+              this._class = '_valid';
 
+              if (this.multiSelect) {
+                  this.set(
+                      'value',
+                      this._getAllButtons()
+                          .filter(button => button.checked)
+                          .map(button => button.name)
+                  );
+
+              } else {
                   if (e.target.checked) {
                       const newVal = e.target.name;
 
@@ -87,13 +95,6 @@
                   } else {
                       this.set('value', undefined);
                   }
-              } else {
-                  this.set(
-                      'value',
-                      this._getAllButtons()
-                          .filter(button => button.checked)
-                          .map(button => button.name)
-                  );
               }
           }
 

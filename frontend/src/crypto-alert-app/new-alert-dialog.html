@@ -4,9 +4,10 @@
 <link rel="import" href="../../bower_components/paper-radio-button/paper-radio-button.html"/>
 <link rel="import" href="../../bower_components/iron-selector/iron-selector.html"/>
 
+<link rel="import" href="alert-form-behavior.html"/>
 <link rel="import" href="form-element-behavior.html"/>
 <link rel="import" href="single-currency-form.html"/>
-
+<link rel="import" href="periodic-notifications-form.html"/>
 
 <dom-module id="new-alert-dialog">
   <template>
@@ -25,6 +26,11 @@
         background-color: rgba(246, 242, 253, 0.51);
         max-height: 30px;
         margin-top: 0;
+        padding-left: 0;
+      }
+
+      .spacer {
+        min-width: 20px;
       }
 
       paper-item {
@@ -49,18 +55,27 @@
                   no-cancel-on-outside-click>
 
       <app-toolbar>
+        <paper-icon-button
+                noink
+                icon="chevron-left"
+                hidden$="[[_isFormSelection]]"
+                on-tap=_backToFormSelection></paper-icon-button>
+        <div class="spacer"></div>
         <div main-title>New alert</div>
       </app-toolbar>
 
       <iron-pages id="pages1" selected="0">
-        <iron-selector id="buttons" class="buttons first" on-iron-select=_openForm>
-          <paper-item>Periodic updates</paper-item>
-          <paper-item>Follow one currency</paper-item>
+
+        <iron-selector id="buttons" class="buttons first" attr-for-selected="form" on-selected-changed=_viewForm>
+          <paper-item form="single">Follow one currency</paper-item>
+          <paper-item form="periodic">Periodic updates</paper-item>
         </iron-selector>
-        <iron-pages id="pages2">
-          <div>toto</div>
+
+        <iron-pages id="pages2" attr-for-selected="id">
+          <periodic-notifications-form id="periodic"></periodic-notifications-form>
           <single-currency-form id="single"></single-currency-form>
         </iron-pages>
+
       </iron-pages>
 
     </paper-dialog>
@@ -73,6 +88,15 @@
               return 'new-alert-dialog';
           }
 
+          static get properties() {
+              return {
+                  _isFormSelection: {
+                      type: Boolean,
+                      value: true
+                  }
+              }
+          }
+
           open() {
               this.$.buttons.select();
               setTimeout(() => this.$.dialog.open());
@@ -82,23 +106,33 @@
               this.$.dialog.close();
           }
 
-
-          _selectPagesAndFit(i, j) {
-              this.$.pages1.select(i);
-              this.$.pages2.select(j);
-              this.$.dialog.resetFit();
-              this.$.dialog.center();
+          _backToFormSelection() {
+              this.set('_isFormSelection', true);
+              this.$.buttons.select();
+              this._selectPagesAndFit(0, 'single');
           }
 
-          _openForm(e) {
-              this._selectPagesAndFit(1, 1);
+          _selectPagesAndFit(pageNo, formId) {
+              this.$.pages1.select(pageNo);
+              this.$.pages2.select(formId);
+
+              setTimeout(() => {
+                  this.$.dialog.resetFit();
+                  this.$.dialog.center();
+              });
+          }
+
+          _viewForm(e) {
+              this.set('_isFormSelection', false);
+              this._selectPagesAndFit(1, e.detail.value);
               e.stopPropagation();
           }
 
           _clearForms(e) {
               if (e.target === this.$.dialog) {
+                  this._backToFormSelection();
                   this.$.single.clearForm();
-                  setTimeout(() => this._selectPagesAndFit(0, 1));
+                  this.$.periodic.clearForm();
               }
           }
       }

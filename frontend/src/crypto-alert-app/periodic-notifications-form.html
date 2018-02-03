@@ -1,8 +1,4 @@
-<link rel="import" href="currencies-input.html"/>
-<link rel="import" href="radio-input.html"/>
-<link rel="import" href="value-input.html"/>
-
-<dom-module id="single-currency-form">
+<dom-module id="periodic-notifications-form">
   <template>
     <style>
       :host {
@@ -24,8 +20,7 @@
       }
 
       .input {
-        @apply --layout-flex;
-        max-width: 10em;
+        @apply --layout-flex-4;
       }
 
       .text {
@@ -37,13 +32,8 @@
         text-align: center;
       }
 
-      .goes {
-        margin-left: 15px;
-      }
-
       .spacer {
         @apply --layout-flex;
-        max-width: 10px;
       }
 
       .buttons {
@@ -55,22 +45,19 @@
       <form>
 
         <div class="inputs">
-
-          <div class="text">Alert me when :</div>
+          <div class="text">Values of</div>
           <div class="spacer"></div>
 
-          <currencies-input id="currency" class="input" required></currencies-input>
+          <radio-input id="currencies" class="input" choices="[[_currencies]]" multi-select required></radio-input>
 
           <div class="spacer"></div>
-          <div class="text goes">goes</div>
+          <div class="text">every</div>
           <div class="spacer"></div>
 
-          <radio-input id="radio" class="input" required choices=[[_radioChoices]]></radio-input>
+          <value-input id="value" class="input" integer-value required></value-input>
 
           <div class="spacer"></div>
-
-          <value-input id="value" class="input" required></value-input>
-
+          <div class="text">minute</div>
         </div>
 
         <div class="buttons">
@@ -84,21 +71,21 @@
   </template>
 
   <script>
-      class SingleCurrencyForm extends Polymer.mixinBehaviors([MyBehaviors.AlertFormBehavior], Polymer.Element) {
+      class PeriodicNotificationsForm extends Polymer.mixinBehaviors([MyBehaviors.AlertFormBehavior], Polymer.Element) {
           static get is() {
-              return 'single-currency-form';
+              return 'periodic-notifications-form';
           }
 
           static get properties() {
               return {
                   _inputNames: {
                       type: Array,
-                      value: () => ['currency', 'radio', 'value']
+                      value: () => ['currencies', 'value']
                   },
 
-                  _radioChoices: {
+                  _currencies: {
                       type: Array,
-                      value: () => ['above', 'below']
+                      value: () => ['BTC', 'ETH']
                   }
               };
           }
@@ -110,8 +97,9 @@
           clearForm() {
               super.clearForm(this);
           }
+
       }
 
-      window.customElements.define('single-currency-form', SingleCurrencyForm);
+      window.customElements.define('periodic-notifications-form', PeriodicNotificationsForm);
   </script>
 </dom-module>

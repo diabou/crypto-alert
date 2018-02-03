@@ -20,8 +20,10 @@
 
         validate: function () {
             if (this.value) {
-                this._class = 'valid';
-                return true;
+                if (typeof this.value === 'string' || Array.isArray(this.value) && this.value.length !== 0) {
+                    this._class = 'valid';
+                    return true;
+                }
             }
 
             this._class = 'invalid';
