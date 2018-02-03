@@ -17,7 +17,7 @@
         @apply --layout-flex;
       }
 
-      #inputs {
+      .inputs {
         @apply --layout-flex-4;
         @apply --layout-between-aligned;
         @apply --layout-horizontal;
@@ -54,7 +54,7 @@
     <iron-form id="form">
       <form>
 
-        <div id="inputs">
+        <div class="inputs">
 
           <div class="text">Alert me when :</div>
           <div class="spacer"></div>
@@ -73,7 +73,7 @@
 
         </div>
 
-        <div class="buttons second">
+        <div class="buttons">
           <paper-button dialog-dismiss>Cancel</paper-button>
           <paper-button autofocus on-tap=_notifyNewAlert>Add</paper-button>
         </div>
@@ -113,7 +113,7 @@
           clearForm() {
               this._inputNames
                   .map(name => this.$[name])
-                  .forEach(input => input.clear);
+                  .forEach(input => input.clear());
           }
       }
 
