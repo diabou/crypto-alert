@@ -65,7 +65,7 @@
           <div class="text goes">goes</div>
           <div class="spacer"></div>
 
-          <radio-input id="radio" class="input" required></radio-input>
+          <radio-input id="radio" class="input" required choices=[[_radioChoices]]></radio-input>
 
           <div class="spacer"></div>
 
@@ -94,8 +94,13 @@
                   _inputNames: {
                       type: Array,
                       value: () => ['currency', 'radio', 'value']
+                  },
+
+                  _radioChoices: {
+                      type: Array,
+                      value: () => ['above', 'below']
                   }
-              }
+              };
           }
 
           _notifyNewAlert() {

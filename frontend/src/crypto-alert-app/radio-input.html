@@ -24,22 +24,17 @@
     </style>
 
     <div id="radios">
-      <div class="radio">
-        <paper-radio-button
-                id="above"
-                class$=[[_class]]
-                noink
-                on-checked-changed=_handleCheck>above
-        </paper-radio-button>
-      </div>
-      <div class="radio">
-        <paper-radio-button
-                id="below"
-                class$=[[_class]]
-                noink
-                on-checked-changed=_handleCheck>below
-        </paper-radio-button>
-      </div>
+      <template is="dom-repeat" items="[[choices]]" as="choice">
+        <div class="radio">
+          <paper-radio-button
+                  id=[[choice]]
+                  class$=[[_class]]
+                  name=[[choice]]
+                  noink
+                  on-checked-changed=_handleCheck>above
+          </paper-radio-button>
+        </div>
+      </template>
     </div>
 
   </template>
@@ -55,30 +50,55 @@
                   name: {
                       type: String,
                       value: 'radio'
+                  },
+
+                  multiSelect: {
+                      type: Boolean,
+                      value: false
+                  },
+
+                  choices: {
+                      type: Array
+                  },
+
+                  value: {
+                      type: Object
                   }
               }
           }
 
           clear() {
+              this._getAllButtons().forEach(el => el.checked = false);
               super.clear();
-              this.$.above.checked = false;
-              this.$.below.checked = false;
           }
 
           _handleCheck(e) {
-              this._class = '_valid';
-              const above = this.$.above;
-              const below = this.$.below;
+              if (!this.multiSelect) {
+                  this._class = '_valid';
 
-              if (e.target === above && above.checked) {
-                  below.checked = false;
-                  this.set('value', 'above');
-              } else if (e.target === below && below.checked) {
-                  above.checked = false;
-                  this.set('value', 'below');
-              } else if (!above.checked && !below.checked) {
-                  this.set('value', undefined);
+                  if (e.target.checked) {
+                      const newVal = e.target.name;
+
+                      this._getAllButtons()
+                          .filter(button => button.name !== newVal)
+                          .forEach(el => el.checked = false);
+
+                      this.set('value', newVal);
+                  } else {
+                      this.set('value', undefined);
+                  }
+              } else {
+                  this.set(
+                      'value',
+                      this._getAllButtons()
+                          .filter(button => button.checked)
+                          .map(button => button.name)
+                  );
               }
+          }
+
+          _getAllButtons() {
+              return [...Polymer.dom(this.$.radios).querySelectorAll('paper-radio-button')];
           }
       }
 
