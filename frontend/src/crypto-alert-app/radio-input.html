@@ -1,4 +1,4 @@
-<dom-module id="radio-menu">
+<dom-module id="radio-input">
   <template>
     <style>
       #radios {
@@ -45,9 +45,9 @@
   </template>
 
   <script>
-      class RadioMenu extends Polymer.mixinBehaviors([MyBehaviors.FormElementBehavior], Polymer.Element) {
+      class RadioInput extends Polymer.mixinBehaviors([MyBehaviors.FormElementBehavior], Polymer.Element) {
           static get is() {
-              return 'radio-menu';
+              return 'radio-input';
           }
 
           static get properties() {
@@ -86,6 +86,6 @@
           }
       }
 
-      window.customElements.define('radio-menu', RadioMenu);
+      window.customElements.define('radio-input', RadioInput);
   </script>
 </dom-module>

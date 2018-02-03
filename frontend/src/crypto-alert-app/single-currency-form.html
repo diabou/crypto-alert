@@ -1,3 +1,6 @@
+<link rel="import" href="currencies-input.html"/>
+<link rel="import" href="radio-input.html"/>
+
 <dom-module id="single-currency-form">
   <template>
     <style>
@@ -55,13 +58,13 @@
           <div class="text">Alert me when :</div>
           <div class="spacer"></div>
 
-          <currencies-menu id="currency" class="input" value="[[currency]]" required></currencies-menu>
+          <currencies-input id="currency" class="input" value="[[currency]]" required></currencies-input>
 
           <div class="spacer"></div>
           <div class="text goes">goes</div>
           <div class="spacer"></div>
 
-          <radio-menu id="radio" class="input" value="[[radio]]" required></radio-menu>
+          <radio-input id="radio" class="input" value="[[radio]]" required></radio-input>
 
           <div class="spacer"></div>
 

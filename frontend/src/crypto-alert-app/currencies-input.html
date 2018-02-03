@@ -1,6 +1,6 @@
 <link rel="import" href="form-element-behavior.html"/>
 
-<dom-module id="currencies-menu">
+<dom-module id="currencies-input">
   <template>
     <style>
       .valid {
@@ -46,7 +46,7 @@
   <script>
       class CurrenciesInput extends Polymer.mixinBehaviors([MyBehaviors.FormElementBehavior], Polymer.Element) {
           static get is() {
-              return 'currencies-menu';
+              return 'currencies-input';
           }
 
           static get properties() {
@@ -75,6 +75,6 @@
           }
       }
 
-      window.customElements.define('currencies-menu', CurrenciesInput);
+      window.customElements.define('currencies-input', CurrenciesInput);
   </script>
 </dom-module>
