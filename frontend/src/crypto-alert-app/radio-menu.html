@@ -45,7 +45,7 @@
   </template>
 
   <script>
-      class RadioMenu extends Polymer.mixinBehaviors([MyBehaviors.AlertFormBehavior], Polymer.Element) {
+      class RadioMenu extends Polymer.mixinBehaviors([MyBehaviors.FormElementBehavior], Polymer.Element) {
           static get is() {
               return 'radio-menu';
           }
@@ -70,6 +70,7 @@
           }
 
           _handleCheck(e) {
+              this._class = '_valid';
               const above = this.$.above;
               const below = this.$.below;
 

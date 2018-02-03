@@ -2,10 +2,12 @@
 <link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html"/>
 <link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html"/>
 <link rel="import" href="../../bower_components/paper-radio-button/paper-radio-button.html"/>
+<link rel="import" href="../../bower_components/iron-selector/iron-selector.html"/>
 
-<link rel="import" href="alert-form-behavior.html"/>
+<link rel="import" href="form-element-behavior.html"/>
 <link rel="import" href="currencies-menu.html"/>
 <link rel="import" href="radio-menu.html"/>
+<link rel="import" href="single-currency-form.html"/>
 
 
 <dom-module id="new-alert-dialog">
@@ -27,46 +29,16 @@
         margin-top: 0;
       }
 
-      iron-form {
-        margin: 0;
+      paper-item {
+        cursor: pointer;
       }
 
-      form {
+      .buttons {
         @apply --layout-flex;
       }
 
-      #inputs {
-        @apply --layout-flex-4;
-        @apply --layout-between-aligned;
-        @apply --layout-horizontal;
-      }
-
-      .input {
-        @apply --layout-flex;
-        max-width: 10em;
-      }
-
-      #goes {
-        margin-left: 15px;
-      }
-
-      .text {
+      .first {
         @apply --layout-vertical;
-        @apply --layout-center-justified;
-        @apply --paper-font-common-nowrap;
-        margin-top: 17px;
-        padding: 0;
-        text-align: center;
-      }
-
-      .spacer {
-        @apply --layout-flex;
-        max-width: 10px;
-      }
-
-      #buttons {
-        @apply --layout-flex;
-        @apply --layout-horizontal;
         margin-top: 15px;
       }
     </style>
@@ -75,51 +47,23 @@
                   always-on-top
                   entry-animation="scale-up-animation"
                   exit-animation="fade-out-animation"
-                  on-iron-overlay-closed=_clearForm
+                  on-iron-overlay-closed=_clearForms
                   no-cancel-on-outside-click>
 
       <app-toolbar>
         <div main-title>New alert</div>
       </app-toolbar>
 
-      <iron-form id="form">
-        <form>
-
-          <div id="inputs">
-
-            <div class="text">Alert me when :</div>
-            <div class="spacer"></div>
-
-            <currencies-menu id="currency" class="input" value="[[_currency]]" required></currencies-menu>
-
-            <div class="spacer"></div>
-            <div id="goes" class="text">goes</div>
-            <div class="spacer"></div>
-
-            <radio-menu id="radio" class="input" value="[[_radio]]" required></radio-menu>
-
-            <div class="spacer"></div>
-
-            <paper-input
-                    id="value"
-                    class="input"
-                    name="value"
-                    required
-                    label="value"
-                    pattern="^[0-9]+(?:[\.,][0-9]+)?$"
-                    error-message="Should be a number"
-                    on-value-changed="_validateInput">
-            </paper-input>
-
-          </div>
-
-          <div id="buttons">
-            <paper-button dialog-dismiss>Cancel</paper-button>
-            <paper-button autofocus on-tap=_validateForm>Add</paper-button>
-          </div>
-
-        </form>
-      </iron-form>
+      <iron-pages id="pages1" selected="0">
+        <iron-selector id="buttons" class="buttons first" on-iron-select=_openForm>
+          <paper-item>Periodic updates</paper-item>
+          <paper-item>Follow one currency</paper-item>
+        </iron-selector>
+        <iron-pages id="pages2">
+          <div>toto</div>
+          <single-currency-form id="single"></single-currency-form>
+        </iron-pages>
+      </iron-pages>
 
     </paper-dialog>
 
@@ -132,41 +76,31 @@
           }
 
           open() {
-              this.$.dialog.open();
+              this.$.buttons.select();
+              setTimeout(() => this.$.dialog.open());
           }
 
           close() {
               this.$.dialog.close();
           }
 
-          _validateForm() {
-              const form = this.$.form;
 
-              if (form.validate()) {
-                  this.dispatchEvent(new CustomEvent('new-alert', {
-                      detail: {
-                          kicked: true,
-                          body: form.serializeForm()
-                      }
-                  }));
-              }
+          _selectPagesAndFit(i, j) {
+              this.$.pages1.select(i);
+              this.$.pages2.select(j);
+              this.$.dialog.resetFit();
+              this.$.dialog.center();
           }
 
-          _validateInput(e) {
-              const target = e.target;
-
-              if (target.value === "") {
-                  target.invalid = false;
-              } else {
-                  target.validate();
-              }
+          _openForm(e) {
+              this._selectPagesAndFit(1, 1);
+              e.stopPropagation();
           }
 
-          _clearForm(e) {
+          _clearForms(e) {
               if (e.target === this.$.dialog) {
-                  this.$.currency.clear();
-                  this.$.radio.clear();
-                  this.$.value.updateValueAndPreserveCaret('');
+                  this.$.single.clearForm();
+                  setTimeout(() => this._selectPagesAndFit(0, 1));
               }
           }
       }

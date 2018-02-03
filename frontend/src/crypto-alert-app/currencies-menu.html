@@ -1,4 +1,4 @@
-<link rel="import" href="alert-form-behavior.html"/>
+<link rel="import" href="form-element-behavior.html"/>
 
 <dom-module id="currencies-menu">
   <template>
@@ -44,7 +44,7 @@
   </template>
 
   <script>
-      class CurrenciesMenu extends Polymer.mixinBehaviors([MyBehaviors.AlertFormBehavior], Polymer.Element) {
+      class CurrenciesInput extends Polymer.mixinBehaviors([MyBehaviors.FormElementBehavior], Polymer.Element) {
           static get is() {
               return 'currencies-menu';
           }
@@ -75,6 +75,6 @@
           }
       }
 
-      window.customElements.define('currencies-menu', CurrenciesMenu);
+      window.customElements.define('currencies-menu', CurrenciesInput);
   </script>
 </dom-module>

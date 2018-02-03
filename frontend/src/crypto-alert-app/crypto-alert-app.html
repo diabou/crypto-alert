@@ -56,7 +56,7 @@
         @apply --layout-vertical;
       }
 
-      #message {
+      .message {
         @apply --layout-flex-3;
         @apply --layout-vertical;
         @apply --layout-end-justified;
@@ -64,17 +64,15 @@
         font-size: 2em;
       }
 
-      #helper {
+      .sub {
         @apply --layout-flex-2;
-        @apply --layout-vertical;
         @apply --layout-start-justified;
-        text-align: center;
         font-size: 1em;
       }
 
       .alert {
         margin-top: 10px;
-        border-radius: 5px;
+        border-radius: 4px;
         padding: 5px 5px 5px 5px;
       }
 
@@ -89,7 +87,7 @@
 
       <app-header slot="header">
         <paper-material elevation="1">
-          <app-toolbar class="toolbar main">
+          <app-toolbar class="toolbar">
             <div main-title>crypto-alert</div>
             <div>
               <paper-icon-button id="add" icon="add" on-tap="_openDialog"></paper-icon-button>
@@ -100,14 +98,16 @@
       </app-header>
 
       <iron-pages id="pages" selected="0">
+
         <div id="noAlert">
-          <div id="message">
+          <div class="message">
             No alert set yet!
           </div>
-          <div id="helper">
+          <div class="message sub">
             click the " + " button in the toolbar to create a new one.
           </div>
         </div>
+
         <div id="alerts">
           <template is="dom-repeat" items="[[_alerts]]" as="alert">
             <paper-material elevation="1" class="alert">
@@ -115,6 +115,7 @@
             </paper-material>
           </template>
         </div>
+
       </iron-pages>
 
       <new-alert-dialog id="dialog" on-new-alert="_handleNewAlert"></new-alert-dialog>
@@ -145,20 +146,8 @@
               this.$.dialog.open();
           }
 
-          _alertAlreadyExists(newAlert) {
-              return this._alerts.find(
-                  alert => Object.getOwnPropertyNames(alert).every(name => alert[name] === newAlert[name])
-              );
-          }
-
-          _addAlert(alert) {
-              const alerts = this._alerts.slice(0);
-              alerts.push(alert);
-              this.set('_alerts', alerts);
-          }
-
           _handleNewAlert(e) {
-              const newAlert = e.detail.body;
+              const newAlert = e.detail;
 
               if (this._alertAlreadyExists(newAlert)) {
                   alert('The same alert already exists');
@@ -171,6 +160,18 @@
                       pages.select(1);
                   }
               }
+          }
+
+          _alertAlreadyExists(newAlert) {
+              return this._alerts.find(
+                  alert => Object.getOwnPropertyNames(alert).every(name => alert[name] === newAlert[name])
+              );
+          }
+
+          _addAlert(alert) {
+              const alerts = this._alerts.slice(0);
+              alerts.push(alert);
+              this.set('_alerts', alerts);
           }
       }
 

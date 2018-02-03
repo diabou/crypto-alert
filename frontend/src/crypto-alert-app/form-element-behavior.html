@@ -1,10 +1,8 @@
-<link rel="import" href="../../bower_components/polymer/polymer.html"/>
-
 <script>
 
     window.MyBehaviors = window.MyBehaviors || {};
 
-    MyBehaviors.AlertFormBehaviorImpl = {
+    MyBehaviors.FormElementBehaviorImpl = {
         properties: {
             _class: {
                 type: String,
@@ -28,8 +26,8 @@
         }
     };
 
-    MyBehaviors.AlertFormBehavior = [
+    MyBehaviors.FormElementBehavior = [
         Polymer.IronFormElementBehavior,
-        MyBehaviors.AlertFormBehaviorImpl
+        MyBehaviors.FormElementBehaviorImpl
     ];
 </script>

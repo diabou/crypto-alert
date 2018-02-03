@@ -1,0 +1,131 @@
+<dom-module id="single-currency-form">
+  <template>
+    <style>
+      :host {
+        @apply --layout-vertical;
+      }
+
+      iron-form {
+        margin: 0;
+      }
+
+      form {
+        @apply --layout-flex;
+      }
+
+      #inputs {
+        @apply --layout-flex-4;
+        @apply --layout-between-aligned;
+        @apply --layout-horizontal;
+      }
+
+      .input {
+        @apply --layout-flex;
+        max-width: 10em;
+      }
+
+      .text {
+        @apply --layout-vertical;
+        @apply --layout-center-justified;
+        @apply --paper-font-common-nowrap;
+        margin-top: 17px;
+        padding: 0;
+        text-align: center;
+      }
+
+      .goes {
+        margin-left: 15px;
+      }
+
+      .spacer {
+        @apply --layout-flex;
+        max-width: 10px;
+      }
+
+      .buttons {
+        @apply --layout-flex;
+      }
+    </style>
+
+    <iron-form id="form">
+      <form>
+
+        <div id="inputs">
+
+          <div class="text">Alert me when :</div>
+          <div class="spacer"></div>
+
+          <currencies-menu id="currency" class="input" value="[[currency]]" required></currencies-menu>
+
+          <div class="spacer"></div>
+          <div class="text goes">goes</div>
+          <div class="spacer"></div>
+
+          <radio-menu id="radio" class="input" value="[[radio]]" required></radio-menu>
+
+          <div class="spacer"></div>
+
+          <paper-input
+                  id="value"
+                  class="input"
+                  name="value"
+                  required
+                  label="value ($)"
+                  pattern="^[0-9]+(?:[\.,][0-9]+)?$"
+                  error-message="Should be a number"
+                  on-value-changed="_validateInput">
+          </paper-input>
+
+        </div>
+
+        <div class="buttons second">
+          <paper-button dialog-dismiss>Cancel</paper-button>
+          <paper-button autofocus on-tap=_notifyNewAlert>Add</paper-button>
+        </div>
+
+      </form>
+    </iron-form>
+
+  </template>
+
+  <script>
+      class SingleCurrencyForm extends Polymer.Element {
+          static get is() {
+              return 'single-currency-form';
+          }
+
+          _notifyNewAlert() {
+              const form = this.$.form;
+
+              if (form.validate()) {
+                  this.dispatchEvent(new CustomEvent('new-alert', {
+                      bubbles: true,
+                      composed: true,
+                      detail: form.serializeForm()
+                  }));
+              }
+          }
+
+          _validateInput(e) {
+              const target = e.target;
+
+              if (target.value === "") {
+                  target.invalid = false;
+              } else {
+                  target.validate();
+              }
+          }
+
+          clearForm() {
+              this.$.currency.clear();
+              this.$.radio.clear();
+
+              const value = this.$.value;
+              value.updateValueAndPreserveCaret('');
+              setTimeout(() => value.invalid = false);
+          }
+      }
+
+      window.customElements.define('single-currency-form', SingleCurrencyForm);
+  </script>
+</dom-module>
