@@ -33,6 +33,15 @@
         padding: 0 5%
       }
 
+      .forms {
+        @apply --layout-flex;
+        @apply --layout-vertical;
+      }
+
+      paper-item {
+        cursor: pointer;
+      }
+
       app-box {
         @apply --layout-flex;
         @apply --layout-vertical;
@@ -90,8 +99,23 @@
           <app-toolbar class="toolbar">
             <div main-title>crypto-alert</div>
             <div>
-              <paper-icon-button id="add" icon="add" on-tap="_openDialog"></paper-icon-button>
+
+              <paper-menu-button horizontal-align="right" vertical-offset="15" horizontal-offset="15">
+                <paper-icon-button id="add" icon="add" slot="dropdown-trigger"></paper-icon-button>
+                <paper-listbox
+                        class="forms"
+                        slot="dropdown-content"
+                        attr-for-selected="form"
+                        selected="{{_alertType}}"
+                        on-iron-select=_openDialog>
+
+                  <paper-item form="periodic">Periodic updates</paper-item>
+                  <paper-item form="single">Follow one currency</paper-item>
+
+                </paper-listbox>
+              </paper-menu-button>
               <paper-tooltip for="add">New alert</paper-tooltip>
+
             </div>
           </app-toolbar>
         </paper-material>
@@ -118,7 +142,10 @@
 
       </iron-pages>
 
-      <new-alert-dialog id="dialog" on-new-alert="_handleNewAlert"></new-alert-dialog>
+      <new-alert-dialog
+              id="dialog"
+              selected="[[_alertType]]"
+              on-new-alert="_handleNewAlert"></new-alert-dialog>
 
     </app-header-layout>
   </template>

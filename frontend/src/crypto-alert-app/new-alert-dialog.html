@@ -26,24 +26,10 @@
         background-color: rgba(246, 242, 253, 0.51);
         max-height: 30px;
         margin-top: 0;
-        padding-left: 0;
       }
 
       .spacer {
         min-width: 20px;
-      }
-
-      paper-item {
-        cursor: pointer;
-      }
-
-      .buttons {
-        @apply --layout-flex;
-      }
-
-      .first {
-        @apply --layout-vertical;
-        margin-top: 15px;
       }
     </style>
 
@@ -51,31 +37,20 @@
                   always-on-top
                   entry-animation="scale-up-animation"
                   exit-animation="fade-out-animation"
-                  on-iron-overlay-closed=_backToFormSelection
                   no-cancel-on-outside-click>
 
       <app-toolbar>
+        <div main-title>New alert</div>
+        <div class="spacer"></div>
         <paper-icon-button
                 noink
-                icon="chevron-left"
-                hidden$={{_isFormSelection}}
-                on-tap=_backToFormSelection></paper-icon-button>
-        <div class="spacer"></div>
-        <div main-title>New alert</div>
+                icon="icons:close"
+                on-tap=close></paper-icon-button>
       </app-toolbar>
 
-      <iron-pages id="pages1" selected="0">
-
-        <iron-selector id="buttons" class="buttons first" attr-for-selected="form" on-selected-changed=_viewForm>
-          <paper-item form="periodic">Periodic updates</paper-item>
-          <paper-item form="single">Follow one currency</paper-item>
-        </iron-selector>
-
-        <iron-pages id="pages2" attr-for-selected="id">
-          <periodic-notifications-form id="periodic"></periodic-notifications-form>
-          <single-currency-form id="single"></single-currency-form>
-        </iron-pages>
-
+      <iron-pages id="pages" attr-for-selected="id" selected="[[selected]]" on-selected-changed=_fit>
+        <periodic-notifications-form id="periodic"></periodic-notifications-form>
+        <single-currency-form id="single"></single-currency-form>
       </iron-pages>
 
     </paper-dialog>
@@ -90,6 +65,11 @@
 
           static get properties() {
               return {
+                  selected: {
+                      type: String,
+                      value: 'periodic'
+                  },
+
                   _isFormSelection: {
                       type: Boolean,
                       value: true
@@ -98,7 +78,6 @@
           }
 
           open() {
-              this.$.buttons.select();
               setTimeout(() => this.$.dialog.open());
           }
 
@@ -106,27 +85,11 @@
               this.$.dialog.close();
           }
 
-          _backToFormSelection() {
-              this._clearForms();
-              this.$.buttons.select();
-              this._selectPagesAndFit(0, 'single');
-              setTimeout(() => this.set('_isFormSelection', true));
-          }
-
-          _selectPagesAndFit(pageNo, formId) {
-              this.$.pages1.select(pageNo);
-              this.$.pages2.select(formId);
-
+          _fit() {
               setTimeout(() => {
                   this.$.dialog.resetFit();
                   this.$.dialog.center();
               });
-          }
-
-          _viewForm(e) {
-              this.set('_isFormSelection', false);
-              this._selectPagesAndFit(1, e.detail.value);
-              e.stopPropagation();
           }
 
           _clearForms(e) {
