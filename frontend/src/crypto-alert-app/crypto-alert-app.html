@@ -11,6 +11,7 @@
 <link rel="import" href="../../bower_components/paper-tooltip/paper-tooltip.html"/>
 <link rel="import" href="../../bower_components/paper-input/paper-input.html"/>
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html"/>
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html"/>
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html"/>
 <link rel="import" href="../../bower_components/web-animations-js/web-animations-next-lite.min.html">
 <link rel="import" href="../../bower_components/neon-animation/animations/scale-up-animation.html">
@@ -38,7 +39,10 @@
         @apply --layout-vertical;
       }
 
-      paper-item {
+      .listItem {
+        @apply --layout-flex;
+        @apply --layout-horizontal;
+        @apply --layout-between-aligned;
         cursor: pointer;
       }
 
@@ -85,6 +89,10 @@
         padding: 5px 5px 5px 5px;
       }
 
+      iron-icon {
+        margin-right: 10px;
+      }
+
       paper-tooltip {
         --paper-tooltip: {
           font-size: 15px;
@@ -109,8 +117,15 @@
                         selected="{{_alertType}}"
                         on-iron-select=_openDialog>
 
-                  <paper-item form="periodic">Periodic updates</paper-item>
-                  <paper-item form="single">Follow one currency</paper-item>
+                  <paper-item class="listItem" form="periodic">
+                    <iron-icon icon="icons:alarm"></iron-icon>
+                    <div class="flex">Periodic updates</div>
+                  </paper-item>
+
+                  <paper-item class="listItem" form="single">
+                    <iron-icon icon="icons:autorenew"></iron-icon>
+                    <div class="flex"> Follow one currency</div>
+                  </paper-item>
 
                 </paper-listbox>
               </paper-menu-button>
@@ -175,7 +190,6 @@
 
           _handleNewAlert(e) {
               const newAlert = e.detail;
-
 
               if (this._alertAlreadyExists(newAlert)) {
                   alert('The same alert already exists');
