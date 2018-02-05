@@ -149,10 +149,11 @@
           _handleNewAlert(e) {
               const newAlert = e.detail;
 
+
               if (this._alertAlreadyExists(newAlert)) {
                   alert('The same alert already exists');
               } else {
-                  this._addAlert(newAlert);
+                  this.set('_alerts', this._alerts.concat([newAlert]));
                   this.$.dialog.close();
 
                   const pages = this.$.pages;
@@ -166,12 +167,6 @@
               return this._alerts.find(
                   alert => Object.getOwnPropertyNames(alert).every(name => alert[name] === newAlert[name])
               );
-          }
-
-          _addAlert(alert) {
-              const alerts = this._alerts.slice(0);
-              alerts.push(alert);
-              this.set('_alerts', alerts);
           }
       }
 

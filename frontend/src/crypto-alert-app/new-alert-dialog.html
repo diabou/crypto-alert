@@ -4,10 +4,10 @@
 <link rel="import" href="../../bower_components/paper-radio-button/paper-radio-button.html"/>
 <link rel="import" href="../../bower_components/iron-selector/iron-selector.html"/>
 
-<link rel="import" href="alert-form-behavior.html"/>
-<link rel="import" href="form-element-behavior.html"/>
-<link rel="import" href="single-currency-form.html"/>
-<link rel="import" href="periodic-notifications-form.html"/>
+<link rel="import" href="../alert-forms/alert-form-behavior.html"/>
+<link rel="import" href="../form-elements/form-element-behavior.html"/>
+<link rel="import" href="../alert-forms/single-currency-form.html"/>
+<link rel="import" href="../alert-forms/periodic-notifications-form.html"/>
 
 <dom-module id="new-alert-dialog">
   <template>
@@ -51,14 +51,14 @@
                   always-on-top
                   entry-animation="scale-up-animation"
                   exit-animation="fade-out-animation"
-                  on-iron-overlay-closed=_clearForms
+                  on-iron-overlay-closed=_backToFormSelection
                   no-cancel-on-outside-click>
 
       <app-toolbar>
         <paper-icon-button
                 noink
                 icon="chevron-left"
-                hidden$="[[_isFormSelection]]"
+                hidden$={{_isFormSelection}}
                 on-tap=_backToFormSelection></paper-icon-button>
         <div class="spacer"></div>
         <div main-title>New alert</div>
@@ -67,8 +67,8 @@
       <iron-pages id="pages1" selected="0">
 
         <iron-selector id="buttons" class="buttons first" attr-for-selected="form" on-selected-changed=_viewForm>
-          <paper-item form="single">Follow one currency</paper-item>
           <paper-item form="periodic">Periodic updates</paper-item>
+          <paper-item form="single">Follow one currency</paper-item>
         </iron-selector>
 
         <iron-pages id="pages2" attr-for-selected="id">
@@ -107,9 +107,10 @@
           }
 
           _backToFormSelection() {
-              this.set('_isFormSelection', true);
+              this._clearForms();
               this.$.buttons.select();
               this._selectPagesAndFit(0, 'single');
+              setTimeout(() => this.set('_isFormSelection', true));
           }
 
           _selectPagesAndFit(pageNo, formId) {
@@ -129,11 +130,8 @@
           }
 
           _clearForms(e) {
-              if (e.target === this.$.dialog) {
-                  this._backToFormSelection();
-                  this.$.single.clearForm();
-                  this.$.periodic.clearForm();
-              }
+              this.$.periodic.clearForm();
+              this.$.single.clearForm();
           }
       }
 

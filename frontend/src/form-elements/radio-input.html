@@ -14,7 +14,7 @@
 
       .valid {
         --paper-radio-button-unchecked-color: #6a6a6a;
-        --paper-radio-button-label-color: #6a6a6a;
+        --paper-radio-button-label-color: black;
       }
 
       .invalid {
@@ -73,7 +73,7 @@
           }
 
           _handleCheck(e) {
-              this._class = '_valid';
+              this._class = 'valid';
 
               if (this.multiSelect) {
                   this.set(
